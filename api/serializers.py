@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers  # type: ignore[import]
 from .models import Students
 from .models import Frame
 

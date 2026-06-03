@@ -1,19 +1,20 @@
 
-from django.shortcuts import get_object_or_404
-from django.core.files.storage import FileSystemStorage
-from django.shortcuts import render
-from .serializers import StudentSerializer
+from django.shortcuts import get_object_or_404 # type:ignore[import]
+from django.core.files.storage import FileSystemStorage # type:ignore[import]
+from django.shortcuts import render # type:ignore[import]
+from .serializers import StudentSerializer # type:ignore[import]
 from .serializers import FrameSerializer
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView # type:ignore[import]
 # from django.views import View
 import datetime
 import json
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods
-from django.http import JsonResponse
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt # type:ignore[import]
+from django.views.decorators.http import require_http_methods # type:ignore[import]
+from django.http import JsonResponse # type:ignore[import]
+from django.http import JsonResponse # type:ignore[import]
+from django.shortcuts import get_object_or_404 # type:ignore[import]
+
+from django.http import JsonResponse # type:ignore[import]
 from .models import Students
 from .models import Frame
 import base64
@@ -22,7 +23,7 @@ from PIL import Image
 # Create your views here.
 
 
-class FrameList(ListAPIView):
+class FrameList(ListCreateAPIView):
     queryset = Frame.objects.all()
     serializer_class = FrameSerializer
 
@@ -63,50 +64,11 @@ class FrameList(ListAPIView):
         return JsonResponse({'error': 'Invalid request method'})
 
 
-class StudentList(ListAPIView):
+class StudentList(ListCreateAPIView):
     queryset = Students.objects.all()
     serializer_class = StudentSerializer
 
-    @csrf_exempt
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        if request.method == 'POST':
-
-            stud_name = request.POST.get('studentName')
-            stud_email = request.POST.get('studentEmail')
-
-            if stud_name:
-                student = Students(studentName=stud_name,
-                                   studentEmail=stud_email)
-                student.save()
-
-            return JsonResponse({'message': 'data created successfully'})
-        return JsonResponse({'error': 'Invalid request method'})
-
-    def put(self, request, *args, **kwargs):
-        print("hello there")
-        if request.method == "PUT":
-            print("PUT IS WORKING ")
-            item_id = kwargs.get('idUpdate')
-            print(item_id)
-            item = get_object_or_404(Students, id=item_id)
-            print(item.studentName)
-            stud_name = request.data.get('studentName')
-            stud_email = request.data.get('studentEmail')
-            print(stud_name)
-            print(stud_email)
-            if stud_name:
-                item.studentName = stud_name
-                item.studentEmail = stud_email
-                item.save()
-                return JsonResponse({'message': 'Data updated successfully'})
-            else:
-                return JsonResponse({'error': 'Please provide a student name'})
-
-    def delete(self, request, *args, **kwargs):
-        item_id = kwargs.get('idDelete')
-        item = get_object_or_404(Students, id=item_id)
-        item.delete()
-        return JsonResponse({'message': 'Data deleted successfully'})
+class StudentDetail(RetrieveUpdateDestroyAPIView):
+    queryset = Students.objects.all()
+    serializer_class = StudentSerializer

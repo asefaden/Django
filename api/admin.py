@@ -1,6 +1,5 @@
-from django.contrib import admin
-from .models import Students
-from .models import Frame
+from django.contrib import admin  # type: ignore[import]
+from .models import Students, Frame
 # Register your models here.
 
 
